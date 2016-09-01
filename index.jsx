@@ -40,6 +40,7 @@ NavLink.propTypes = {
   additionalRoutes: PropTypes.array,
   indexOnly: PropTypes.bool,
   callback: PropTypes.func,
+  dropdown: PropTypes.element,
 };
 
 NavLink.defaultProps = {
