@@ -26,7 +26,7 @@ const NavLink = (props, context) => {
       )}
     >
 
-      <Link className='nav-link' {...opts} />
+      <Link className={classNames('nav-link', { active })} {...opts} />
 
       { dropdown }
 
