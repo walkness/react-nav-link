@@ -5,7 +5,9 @@ import classNames from 'classnames';
 
 
 const NavLink = (props, context) => {
-  const { liClassName, callback, indexOnly, additionalRoutes, dropdown, ...opts } = props;
+  const {
+    liClassName, callback, indexOnly, additionalRoutes, dropdown, noLinkActive, ...opts
+  } = props;
 
   let active = callback(context.router.isActive(props.to, indexOnly));
   if (!active) {
@@ -26,7 +28,9 @@ const NavLink = (props, context) => {
       )}
     >
 
+      { noLinkActive ? props.children :
       <Link className={classNames('nav-link', { active })} {...opts} />
+      }
 
       { dropdown }
 
@@ -41,6 +45,8 @@ NavLink.propTypes = {
   indexOnly: PropTypes.bool,
   callback: PropTypes.func,
   dropdown: PropTypes.element,
+  noLinkActive: PropTypes.bool,
+  children: PropTypes.node,
 };
 
 NavLink.defaultProps = {
