@@ -9,12 +9,10 @@ const NavLink = (props, context) => {
 
   let active = callback(context.router.isActive(props.to, indexOnly));
   if (!active) {
-    for (const route of additionalRoutes) {
-      if (context.router.isActive(route, indexOnly)) {
-        active = true;
-        break;
-      }
-    }
+    active = additionalRoutes.reduce((prev, curr) => {
+      if (context.router.isActive(curr, indexOnly)) return true;
+      return prev;
+    }, false);
   }
 
   return (
@@ -35,18 +33,20 @@ const NavLink = (props, context) => {
 };
 
 NavLink.propTypes = {
-  liClassName: PropTypes.string,
-  to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-  additionalRoutes: PropTypes.array,
-  indexOnly: PropTypes.bool,
+  additionalRoutes: PropTypes.arrayOf(PropTypes.string),
   callback: PropTypes.func,
   dropdown: PropTypes.element,
+  indexOnly: PropTypes.bool,
+  liClassName: PropTypes.string,
+  to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 };
 
 NavLink.defaultProps = {
   additionalRoutes: [],
+  callback: e => e,
+  dropdown: null,
   indexOnly: false,
-  callback: (e) => e,
+  liClassName: null,
 };
 
 NavLink.contextTypes = {
