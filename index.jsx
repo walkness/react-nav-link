@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { routerShape } from 'react-router/lib/PropTypes';
-import { Link } from 'react-router';
+import { matchPath } from 'react-router';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 
@@ -10,10 +10,20 @@ const NavLink = (props, context) => {
     liClassName, callback, indexOnly, additionalRoutes, dropdown, noLinkActive, ...opts
   } = props;
 
-  let active = callback(context.router.isActive(props.to, indexOnly));
+  const isActive = (path) => {
+    let active = false;
+    const { router } = context;
+    if (path && router) {
+      const { location } = router.history;
+      active = matchPath(location.pathname, { path }) !== null;
+    }
+    return active;
+  };
+
+  let active = callback(isActive(props.to, indexOnly));
   if (!active) {
     active = additionalRoutes.reduce((prev, curr) => {
-      if (context.router.isActive(curr, indexOnly)) return true;
+      if (isActive(curr, indexOnly)) return true;
       return prev;
     }, false);
   }
@@ -59,7 +69,11 @@ NavLink.defaultProps = {
 };
 
 NavLink.contextTypes = {
-  router: routerShape,
+  router: PropTypes.shape({
+    history: PropTypes.shape({
+      location: PropTypes.object,
+    }),
+  }),
 };
 
 export default NavLink;
