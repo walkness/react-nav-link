@@ -1,44 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { matchPath } from 'react-router';
-import { Link } from 'react-router-dom';
+import { NavLink as BaseNavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
 
-const NavLink = (props, context) => {
+const NavLink = (props) => {
   const {
     liClassName, callback, indexOnly, additionalRoutes, dropdown, noLinkActive, ...opts
   } = props;
-
-  const isActive = (path) => {
-    let active = false;
-    const { router } = context;
-    if (path && router) {
-      const { location } = router.history;
-      active = matchPath(location.pathname, { path }) !== null;
-    }
-    return active;
-  };
-
-  let active = callback(isActive(props.to, indexOnly));
-  if (!active) {
-    active = additionalRoutes.reduce((prev, curr) => {
-      if (isActive(curr, indexOnly)) return true;
-      return prev;
-    }, false);
-  }
-
   return (
     <li
       className={classNames(
         'nav-item',
         { [liClassName]: liClassName },
-        { active },
       )}
     >
 
       { noLinkActive ? props.children :
-      <Link className={classNames('nav-link', { active })} {...opts} />
+      <BaseNavLink
+        className='nav-link'
+        {...opts}
+        activeClassName='active'
+        exact={indexOnly}
+      />
       }
 
       { dropdown }
